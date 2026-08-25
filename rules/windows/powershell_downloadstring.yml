@@ -1,0 +1,30 @@
+title: PowerShell DownloadString Download Cradle
+id: 5841e2a9-9df8-4a51-abea-909fb9c8c3a2
+status: experimental
+description: >
+    Detects PowerShell spawning with DownloadString in the command line,
+    a classic download cradle used to fetch and execute remote payloads.
+references:
+    - https://attack.mitre.org/techniques/T1059/001/
+author: Cupid-0x80h
+date: 2026-08-25
+tags:
+    - attack.execution
+    - attack.t1059.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - '\powershell.exe'
+            - '\pwsh.exe'
+    selection_cmdline:
+        CommandLine|contains:
+            - 'DownloadString'
+            - 'IEX (New-Object Net.WebClient)'
+            - 'Invoke-Expression (New-Object Net.WebClient)'
+    condition: 1 of selection_*
+falsepositives:
+    - Administrative scripts downloading content from known internal hosts
+level: high
