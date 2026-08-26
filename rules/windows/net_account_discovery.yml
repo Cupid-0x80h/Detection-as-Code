@@ -1,0 +1,30 @@
+title: Local Account Discovery via Net Commands
+id: ef35f0c4-cc21-4f46-a129-66e2b460a459
+status: experimental
+description: >
+    Detects enumeration of local user accounts and groups with net.exe,
+    common reconnaissance before privilege escalation or lateral movement.
+references:
+    - https://attack.mitre.org/techniques/T1087/001/
+author: Cupid-0x80h
+date: 2026-08-26
+tags:
+    - attack.discovery
+    - attack.t1087.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - '\net.exe'
+            - '\net1.exe'
+    selection_cmdline:
+        CommandLine|contains:
+            - ' net user'
+            - ' net group'
+            - ' net localgroup'
+    condition: 1 of selection_*
+falsepositives:
+    - IT administration scripts enumerating accounts on servers
+level: low

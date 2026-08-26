@@ -1,0 +1,31 @@
+title: Suspicious Registry Run Key Modification
+id: fe18ea95-ddde-442b-b717-ba3886bb309e
+status: experimental
+description: >
+    Detects writes to autorun registry keys under the Run/RunOnce locations,
+    a common persistence mechanism for malware and backdoors.
+references:
+    - https://attack.mitre.org/techniques/T1547/001/
+author: Cupid-0x80h
+date: 2026-08-26
+tags:
+    - attack.persistence
+    - attack.t1547.001
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection_key:
+        TargetObject|contains:
+            - '\SOFTWARE\Microsoft\Windows\CurrentVersion\Run'
+            - '\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce'
+    filter_legit:
+        Image|endswith:
+            - '\msiexec.exe'
+            - '\chrome.exe'
+            - '\firefox.exe'
+        Details|startswith: '"'
+    condition: selection_key and not 1 of filter_*
+falsepositives:
+    - Legitimate software installers adding autorun entries
+level: medium
