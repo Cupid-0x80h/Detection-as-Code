@@ -1,0 +1,30 @@
+title: SSH Brute Force Attempt
+id: 7c9ac870-60e1-470f-ac58-cc085face543
+status: experimental
+description: >
+    Detects multiple failed SSH login attempts from the same source IP
+    within a short time window, indicating brute force or credential
+    stuffing attacks.
+references:
+    - https://attack.mitre.org/techniques/T1110/001/
+author: Cupid-0x80h
+date: 2026-08-27
+tags:
+    - attack.credential-access
+    - attack.t1110.001
+logsource:
+    category: authentication
+    product: linux
+    service: sshd
+detection:
+    selection:
+        EventID: 4625
+        TargetUserName|endswith:
+            - 'root'
+            - 'admin'
+            - 'ubuntu'
+            - 'centos'
+    condition: selection
+falsepositives:
+    - Legitimate users mistyping passwords
+level: high

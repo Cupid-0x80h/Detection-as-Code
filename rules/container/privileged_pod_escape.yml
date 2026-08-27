@@ -1,0 +1,29 @@
+title: Container Escape via Privileged Pod
+id: 20a80971-00ad-4238-a9ca-686259227bfe
+status: experimental
+description: >
+    Detects creation of privileged containers or pods with hostPath
+    mounts that can be used for container escape to the host.
+references:
+    - https://attack.mitre.org/techniques/T1611/
+author: Cupid-0x80h
+date: 2026-08-27
+tags:
+    - attack.privilege-escalation
+    - attack.t1611
+logsource:
+    category: kubernetes_audit
+    product: kubernetes
+detection:
+    selection_privileged:
+        objectRef.resource: pods
+        verb: create
+        requestObject.spec.securityContext.privileged: true
+    selection_hostpath:
+        objectRef.resource: pods
+        verb: create
+        requestObject.spec.volumes.hostPath.path: '/'
+    condition: 1 of selection_*
+falsepositives:
+    - Legitimate privileged workloads (monitoring agents, CSI drivers)
+level: high
