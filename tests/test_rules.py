@@ -42,7 +42,7 @@ def test_detection_shape():
 
 def test_conversion_succeeds():
     out = subprocess.run(
-        [SIGMA, "convert", "-t", "lucene", "-p", "ecs_windows",
+        [SIGMA, "convert", "-t", "lucene", "-p", "ecs_windows", "-p", "ecs_kubernetes", "-p", "ecs_zeek_beats",
          "-f", "kibana_ndjson", str(REPO / "rules")],
         capture_output=True, text=True)
     assert out.returncode == 0, out.stderr

@@ -27,7 +27,7 @@ jobs:
       - name: Compile Sigma -> Kibana NDJSON
         run: |
           mkdir -p out
-          sigma convert -t lucene -p ecs_windows -f kibana_ndjson rules/ > out/kibana-rules.ndjson
+          sigma convert -t lucene -p ecs_windows -p ecs_kubernetes -p ecs_zeek_beats -f kibana_ndjson rules/ > out/kibana-rules.ndjson
           cat out/kibana-rules.ndjson
 
       - uses: actions/upload-artifact@v4
