@@ -21,7 +21,7 @@ tests/         structural + conversion tests (pytest)
 ## Local workflow
 
 ```bash
-make lint     # sigma check -E -i (fails on errors AND tagging issues)
+make lint     # sigma check -i (fails on rule errors AND tagging issues)
 make test     # pytest
 make build    # compile to out/kibana-rules.ndjson (Kibana Detection Engine rules)
 make deploy   # import into local Kibana (needs ELASTIC_PASSWORD env)

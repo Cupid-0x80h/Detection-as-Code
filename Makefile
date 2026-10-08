@@ -5,7 +5,7 @@ PYTEST ?= $(shell command -v pytest 2>/dev/null || echo ../.venv/bin/pytest)
 .PHONY: lint test build deploy clean
 
 lint:
-	"$(SIGMA)" check -E -i rules/
+	"$(SIGMA)" check -i rules/
 
 test:
 	"$(PYTEST)" tests/ -q
