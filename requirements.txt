@@ -4,3 +4,5 @@ pySigma-backend-elasticsearch==2.1.1
 pysigma-pipeline-windows==2.0.0
 pysigma-pipeline-sysmon==2.0.0
 pytest>=8,<9
+# pyparsing 3.3.3 breaks pySigma 1.5.0 condition parsing ("'str' object is not callable")
+pyparsing==3.3.2
