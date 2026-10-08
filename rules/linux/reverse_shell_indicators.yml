@@ -1,0 +1,31 @@
+title: Reverse Shell Command Line Indicators
+id: a7acf7a8-f346-4e77-8c94-45d51c89479d
+status: experimental
+description: >
+    Detects Linux process command lines containing common reverse shell
+    constructs (bash -i, /dev/tcp, nc -e), used to turn a foothold into
+    an interactive remote shell.
+references:
+    - https://attack.mitre.org/techniques/T1059/004/
+author: Cupid-0x80h
+date: 2026-10-08
+tags:
+    - attack.execution
+    - attack.t1059.004
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        CommandLine|contains:
+            - 'bash -i'
+            - 'sh -i'
+            - '/dev/tcp/'
+            - 'nc -e '
+            - 'ncat -e '
+            - 'socat TCP:'
+            - 'python -c "import pty'
+    condition: selection
+falsepositives:
+    - Interactive troubleshooting sessions and capture-the-flag tools
+level: high

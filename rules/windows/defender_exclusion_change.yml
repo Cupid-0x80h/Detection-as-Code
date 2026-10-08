@@ -1,0 +1,38 @@
+title: Windows Defender Exclusion or Preference Change
+id: 0361a14a-e262-4585-a8f6-6e73757d2b94
+status: experimental
+description: >
+    Detects PowerShell or cmd changing Microsoft Defender preferences,
+    typically adding exclusion paths for malware folders or disabling
+    real-time protection.
+references:
+    - https://attack.mitre.org/techniques/T1564/012/
+    - https://attack.mitre.org/techniques/T1685/
+author: Cupid-0x80h
+date: 2026-10-08
+tags:
+    - attack.stealth
+    - attack.defense-impairment
+    - attack.t1564.012
+    - attack.t1685
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - '\powershell.exe'
+            - '\pwsh.exe'
+            - '\powershell_ise.exe'
+            - '\cmd.exe'
+    selection_cmd:
+        CommandLine|contains:
+            - 'Add-MpPreference'
+            - 'Set-MpPreference'
+            - '-ExclusionPath'
+            - '-ExclusionProcess'
+            - '-DisableRealtimeMonitoring'
+    condition: all of selection_*
+falsepositives:
+    - Administrators tuning Defender policy from a workstation
+level: high

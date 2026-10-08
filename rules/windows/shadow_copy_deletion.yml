@@ -1,0 +1,32 @@
+title: Volume Shadow Copy Deletion
+id: 5d07344c-850b-437c-8a28-36f6e864b2c2
+status: experimental
+description: >
+    Detects tools deleting volume shadow copies or disabling recovery,
+    a ransomware and anti-forensics step that removes the ability to
+    restore encrypted or tampered files.
+references:
+    - https://attack.mitre.org/techniques/T1490/
+author: Cupid-0x80h
+date: 2026-10-08
+tags:
+    - attack.impact
+    - attack.t1490
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - '\vssadmin.exe'
+            - '\wbadmin.exe'
+            - '\bcdedit.exe'
+    selection_cmd:
+        CommandLine|contains:
+            - 'delete shadows'
+            - 'delete catalog'
+            - 'bootstatuspolicy'
+    condition: all of selection_*
+falsepositives:
+    - Backup and disaster recovery jobs that rotate shadow copies
+level: high

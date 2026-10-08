@@ -1,0 +1,34 @@
+title: Kubernetes Pod Exec Attach or Port Forward
+id: dffec0f8-4944-4b7b-9c6c-ca232d371ccd
+status: experimental
+description: >
+    Detects use of the Kubernetes exec, attach or portforward
+    subresources on pods, which gives an interactive shell inside a
+    container and is a common post-compromise step.
+references:
+    - https://attack.mitre.org/techniques/T1609/
+author: Cupid-0x80h
+date: 2026-10-08
+tags:
+    - attack.execution
+    - attack.t1609
+logsource:
+    product: kubernetes
+    service: audit
+detection:
+    selection_exec:
+        verb: create
+        resource: pods
+        subresource: exec
+    selection_attach:
+        verb: create
+        resource: pods
+        subresource: attach
+    selection_portforward:
+        verb: create
+        resource: pods
+        subresource: portforward
+    condition: 1 of selection_*
+falsepositives:
+    - Administrators debugging workloads with kubectl exec
+level: high

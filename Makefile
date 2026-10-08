@@ -5,13 +5,13 @@ PYTEST ?= $(shell command -v pytest 2>/dev/null || echo ../.venv/bin/pytest)
 .PHONY: lint test build deploy clean
 
 lint:
-	$(SIGMA) check rules/
+	"$(SIGMA)" check -E -i rules/
 
 test:
-	$(PYTEST) tests/ -q
+	"$(PYTEST)" tests/ -q
 
 build:
-	mkdir -p out && $(SIGMA) convert -t lucene -p ecs_windows -p ecs_kubernetes -p ecs_zeek_beats -f kibana_ndjson rules/ > out/kibana-rules.ndjson
+	mkdir -p out && "$(SIGMA)" convert -t lucene -p ecs_windows -p ecs_kubernetes -p ecs_zeek_beats -f siem_rule_ndjson rules/ > out/kibana-rules.ndjson
 	@wc -l out/kibana-rules.ndjson
 
 # ponytail: local-only because the stack binds 127.0.0.1; self-hosted runner needed for remote deploys

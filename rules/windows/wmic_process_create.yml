@@ -1,0 +1,27 @@
+title: WMI Remote Process Creation
+id: b6bf644b-693f-41b7-91c0-eacd836d8330
+status: experimental
+description: >
+    Detects wmic.exe creating a process on the local or a remote host,
+    a common execution and lateral movement technique that spawns
+    payloads without touching disk.
+references:
+    - https://attack.mitre.org/techniques/T1047/
+author: Cupid-0x80h
+date: 2026-10-08
+tags:
+    - attack.execution
+    - attack.lateral-movement
+    - attack.t1047
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: '\wmic.exe'
+    selection_cmd:
+        CommandLine|contains: 'process call create'
+    condition: all of selection_*
+falsepositives:
+    - Administrative scripts and SCCM inventory tasks
+level: medium

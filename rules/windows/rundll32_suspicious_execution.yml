@@ -1,0 +1,32 @@
+title: Suspicious Rundll32 Execution Patterns
+id: 398dfd23-b653-438e-980b-557cf8c8bcdc
+status: experimental
+description: >
+    Detects rundll32.exe launching scriptlets, control panel items or
+    loading DLLs from user-writable directories, a common fileless
+    execution and defense evasion technique.
+references:
+    - https://attack.mitre.org/techniques/T1218/011/
+author: Cupid-0x80h
+date: 2026-10-08
+tags:
+    - attack.stealth
+    - attack.execution
+    - attack.t1218.011
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: '\rundll32.exe'
+    selection_cmd:
+        CommandLine|contains:
+            - 'javascript:'
+            - 'vbscript:'
+            - 'shell32.dll,Control_RunDLL'
+            - '\Temp\'
+            - '\AppData\'
+    condition: all of selection_*
+falsepositives:
+    - Legitimate control panel applets and installer activity
+level: medium

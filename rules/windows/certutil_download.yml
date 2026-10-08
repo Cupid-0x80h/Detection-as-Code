@@ -1,0 +1,33 @@
+title: Certutil URL Cache Download
+id: 8f9f516a-3db7-465e-b426-86de683dcd01
+status: experimental
+description: >
+    Detects certutil.exe used to download or decode files via -urlcache
+    or -verifyctl, a LOLBin technique for fetching second-stage payloads
+    while living off the signed Microsoft binary.
+references:
+    - https://attack.mitre.org/techniques/T1105/
+    - https://attack.mitre.org/techniques/T1218/003/
+author: Cupid-0x80h
+date: 2026-10-08
+tags:
+    - attack.command-and-control
+    - attack.t1105
+    - attack.t1218.003
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: '\certutil.exe'
+    selection_cmd:
+        CommandLine|contains:
+            - ' -urlcache'
+            - ' -verifyctl'
+            - ' -decode'
+            - '-f http://'
+            - '-f https://'
+    condition: all of selection_*
+falsepositives:
+    - Software deployment tools that stage payloads with certutil
+level: high

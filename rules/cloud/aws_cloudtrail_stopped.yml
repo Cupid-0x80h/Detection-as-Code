@@ -1,0 +1,27 @@
+title: AWS CloudTrail Logging Stopped
+id: 5517febd-4013-4d6b-82f4-02b79506d076
+status: experimental
+description: >
+    Detects an API call that stops or deletes CloudTrail logging, which
+    hides subsequent attacker activity from the audit trail.
+references:
+    - https://attack.mitre.org/techniques/T1685/002/
+author: Cupid-0x80h
+date: 2026-10-08
+tags:
+    - attack.defense-impairment
+    - attack.t1685.002
+logsource:
+    category: cloudtrail
+    product: aws
+detection:
+    selection:
+        eventSource: cloudtrail.amazonaws.com
+        eventName:
+            - StopLogging
+            - DeleteTrail
+            - UpdateTrail
+    condition: selection
+falsepositives:
+    - Legitimate trail rotation by security or compliance tooling
+level: critical

@@ -1,0 +1,31 @@
+title: Sensitive Authentication File Modification
+id: e989c3c0-8d8a-4465-b731-50cc46956148
+status: experimental
+description: >
+    Detects writes to files that control local authentication and
+    privilege (/etc/passwd, /etc/shadow, /etc/sudoers, sshd_config),
+    indicating account creation, password resets or sudo backdoors.
+references:
+    - https://attack.mitre.org/techniques/T1098/
+    - https://attack.mitre.org/techniques/T1543/002/
+author: Cupid-0x80h
+date: 2026-10-08
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1098
+logsource:
+    category: file_event
+    product: linux
+detection:
+    selection:
+        TargetFilename:
+            - '/etc/passwd'
+            - '/etc/shadow'
+            - '/etc/sudoers'
+            - '/etc/ssh/sshd_config'
+            - '/etc/pam.d/sshd'
+    condition: selection
+falsepositives:
+    - Configuration management tools provisioning accounts or sshd
+level: high

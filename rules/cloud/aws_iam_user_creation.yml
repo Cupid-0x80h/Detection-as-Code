@@ -1,0 +1,29 @@
+title: AWS IAM User or Access Key Created
+id: 5663a5cb-40fe-495c-8e8e-e5b0120256fe
+status: experimental
+description: >
+    Detects CloudTrail events that create an IAM user, an access key or
+    attach a policy to a user, used to establish persistence in AWS.
+references:
+    - https://attack.mitre.org/techniques/T1136/001/
+author: Cupid-0x80h
+date: 2026-10-08
+tags:
+    - attack.persistence
+    - attack.t1136.001
+logsource:
+    category: cloudtrail
+    product: aws
+detection:
+    selection:
+        eventSource: iam.amazonaws.com
+        eventName:
+            - CreateUser
+            - CreateAccessKey
+            - CreateUserPolicy
+            - AttachUserPolicy
+            - PutUserPolicy
+    condition: selection
+falsepositives:
+    - Automation that provisions service accounts or rotates keys
+level: high

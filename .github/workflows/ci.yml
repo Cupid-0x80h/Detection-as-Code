@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 
 jobs:
   build:
@@ -14,21 +15,19 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
+          cache: pip
 
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Validate rules (sigma check)
-        run: sigma check rules/
+      - name: Validate rules (strict sigma check)
+        run: make lint
 
       - name: Run tests
-        run: pytest tests/ -q
+        run: make test
 
       - name: Compile Sigma -> Kibana NDJSON
-        run: |
-          mkdir -p out
-          sigma convert -t lucene -p ecs_windows -p ecs_kubernetes -p ecs_zeek_beats -f kibana_ndjson rules/ > out/kibana-rules.ndjson
-          cat out/kibana-rules.ndjson
+        run: make build
 
       - uses: actions/upload-artifact@v4
         with:

@@ -2,13 +2,13 @@ title: Sudo/Su Privilege Escalation
 id: 20c0ec7d-60c7-4660-b2ef-0641df92a31f
 status: experimental
 description: >
-    Detects successful sudo or su executions by non-root users,
-    particularly when spawning shells or running sensitive commands.
+    Detects sudo or su spawning a shell (login or interactive), a step
+    taken after privilege escalation or by an attacker with a foothold.
 references:
     - https://attack.mitre.org/techniques/T1548/003/
     - https://attack.mitre.org/techniques/T1548/002/
 author: Cupid-0x80h
-date: 2026-08-27
+date: 2026-10-08
 tags:
     - attack.privilege-escalation
     - attack.t1548.003
@@ -17,14 +17,14 @@ logsource:
     product: linux
 detection:
     selection_sudo:
-        Image|endswith: '\sudo'
+        Image|endswith: '/sudo'
         CommandLine|contains:
             - ' /bin/bash'
             - ' /bin/sh'
             - ' /bin/zsh'
-            - ' su -'
+            - ' -i'
     selection_su:
-        Image|endswith: '\su'
+        Image|endswith: '/su'
         CommandLine|contains:
             - ' -'
             - ' -l'

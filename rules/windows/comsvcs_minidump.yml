@@ -1,0 +1,30 @@
+title: LSASS Dump via Comsvcs MiniDump
+id: 1890bb96-fb2c-45c3-8886-f990c45965ab
+status: experimental
+description: >
+    Detects rundll32 or cmd invoking comsvcs.dll MiniDump to dump LSASS
+    memory without a dedicated dumping tool, bypassing allow lists that
+    only watch for procdump or mimikatz.
+references:
+    - https://attack.mitre.org/techniques/T1003/001/
+author: Cupid-0x80h
+date: 2026-10-08
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - '\rundll32.exe'
+            - '\cmd.exe'
+    selection_dll:
+        CommandLine|contains: 'comsvcs.dll'
+    selection_dump:
+        CommandLine|contains: 'MiniDump'
+    condition: all of selection_*
+falsepositives:
+    - Legitimate crash dump collection using the same API
+level: high

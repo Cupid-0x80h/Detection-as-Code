@@ -1,0 +1,26 @@
+title: HTTP Request to a Bare IP Address Host
+id: 624a913d-ad94-4718-89c2-7b030aafdd37
+status: experimental
+description: >
+    Detects HTTP requests where the host header is a numeric IP address
+    rather than a domain name, a common indicator of command and
+    control channels that skip DNS resolution.
+references:
+    - https://attack.mitre.org/techniques/T1071/001/
+author: Cupid-0x80h
+date: 2026-10-08
+tags:
+    - attack.command-and-control
+    - attack.t1071.001
+logsource:
+    product: zeek
+    service: http
+detection:
+    selection:
+        cs-host|re: '^\d{1,3}(\.\d{1,3}){3}$'
+    filter_internal:
+        dst|re: '^(10\.|192\.168\.|127\.|172\.(1[6-9]|2[0-9]|3[01])\.)'
+    condition: selection and not filter_internal
+falsepositives:
+    - Internal monitoring, NAS or appliance UIs addressed by IP
+level: low

@@ -1,0 +1,27 @@
+title: DNS Tunnelling via Long Query Name
+id: 2003d6c9-42d2-4b74-aa4d-b4a81913f563
+status: experimental
+description: >
+    Detects DNS queries with unusually long names, a signal of DNS
+    tunnelling where data is exfiltrated or C2 traffic is carried in
+    encoded subdomain labels.
+references:
+    - https://attack.mitre.org/techniques/T1071/004/
+author: Cupid-0x80h
+date: 2026-10-08
+tags:
+    - attack.command-and-control
+    - attack.exfiltration
+    - attack.t1071.004
+logsource:
+    product: zeek
+    service: dns
+detection:
+    selection:
+        question_length|gte: 80
+    filter_ptr:
+        query|endswith: '.in-addr.arpa'
+    condition: selection and not filter_ptr
+falsepositives:
+    - Legitimate DNS-based services such as DoH health checks or CDNs
+level: medium

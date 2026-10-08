@@ -7,22 +7,22 @@ description: >
 references:
     - https://attack.mitre.org/techniques/T1611/
 author: Cupid-0x80h
-date: 2026-08-27
+date: 2026-10-08
 tags:
     - attack.privilege-escalation
     - attack.t1611
 logsource:
-    category: kubernetes_audit
     product: kubernetes
+    service: audit
 detection:
     selection_privileged:
-        objectRef.resource: pods
         verb: create
-        requestObject.spec.securityContext.privileged: true
+        resource: pods
+        privileged: true
     selection_hostpath:
-        objectRef.resource: pods
         verb: create
-        requestObject.spec.volumes.hostPath.path: '/'
+        resource: pods
+        hostPath: '/'
     condition: 1 of selection_*
 falsepositives:
     - Legitimate privileged workloads (monitoring agents, CSI drivers)
