@@ -15,11 +15,12 @@ build:
 	@wc -l out/kibana-rules.ndjson
 
 # ponytail: local-only because the stack binds 127.0.0.1; self-hosted runner needed for remote deploys
+# Kibana 9 removed /rules/import, the endpoint is /rules/_import (multipart file upload)
 deploy:
-	curl -sS -X POST "$${KIBANA_URL:-http://localhost:5601}/api/detection_engine/rules/import" \
+	curl -sS -X POST "$${KIBANA_URL:-http://localhost:5601}/api/detection_engine/rules/_import?overwrite=true" \
 		-u "elastic:$${ELASTIC_PASSWORD:?set ELASTIC_PASSWORD}" \
-		-H 'kbn-xsrf: true' -H 'elastic-api-version: 2023-10-31' \
-		--data-binary @out/kibana-rules.ndjson
+		-H 'kbn-xsrf: true' \
+		-F file=@out/kibana-rules.ndjson
 
 clean:
 	rm -rf out
